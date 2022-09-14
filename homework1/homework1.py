@@ -90,6 +90,20 @@ def main():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     
+    sv = 0.15
+    sh = 1
+    img_sh = at.image_shear(sv, sh)
+    cv2.imshow("sheared Image", img_sh)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+    sv = 0
+    sh = -0.75
+    img_sh = at.image_shear(sv, sh)
+    cv2.imshow("sheared Image at (0.-0.75)", img_sh)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
     r_theta = -0.1
     img_r = at.image_rotate(r_theta)
     cv2.imshow("Rotated Image", img_r)

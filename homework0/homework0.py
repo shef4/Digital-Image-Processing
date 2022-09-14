@@ -34,7 +34,7 @@ class Object_Detection():
         return "Background_Subtraction",img_res
     
     def print_img(self,title, img):
-        ZZZZZZZZZZZZZZZcv2.imshow(title, img)
+        cv2.imshow(title, img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
         return 
