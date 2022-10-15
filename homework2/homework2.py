@@ -59,13 +59,13 @@ class intXform4e():
 
     # transform function
     def neg_func(self,local_pixels):
-        mid_x= min(1,local_pixels.shape[1]-1)
+        mid_x = min(1,local_pixels.shape[1]-1)
         mid_y = min(1,local_pixels.shape[0]-1)
         return self.MAX - local_pixels[mid_y,mid_x,0]
 
     def log_func(self,local_pixels):
         mid_x= min(1,local_pixels.shape[1]-1)
-        mid_y = min(1,local_pixels.shape[0]-1)
+        mid_y= min(1,local_pixels.shape[0]-1)
         #c = self.MAX/(np.log(1 + np.max(local_pixels)))
         c = 1
         return c*np.log(1 + local_pixels[mid_y,mid_x,0])
