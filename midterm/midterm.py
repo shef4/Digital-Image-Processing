@@ -21,14 +21,13 @@ class Midterm():
                 res_hist[i] = a
         return res_hist
 
-    def find_nearest_above(self, my_array, target):
-        diff = my_array - target
+    def find_nearest_above(self, desired_hist, data):
+        diff = desired_hist - data
         mask = np.ma.less_equal(diff, -1)
-        # We need to mask the negative differences
-        # since we are looking for values above
+
         if np.all(mask):
             c = np.abs(diff).argmin()
-            return c # returns min index of the nearest if target is greater than any value
+            return c 
         masked_diff = np.ma.masked_array(diff, mask)
         return masked_diff.argmin()
 
@@ -36,31 +35,27 @@ class Midterm():
         img = np.array(img, dtype = np.uint8)
         oldshape = img.shape
         img = img.ravel()
-        #specified = specified.ravel()
 
-        # get the set of unique pixel values and their corresponding indices and counts
-        s_values, bin_idx, s_counts = np.unique(img, return_inverse=True,return_counts=True)
-        #t_values, t_counts = np.unique(specified, return_counts=True)
-        t_counts = self.desired_hist()
-        # Calculate s_k for original image
-        s_quantiles = np.cumsum(s_counts).astype(np.float64)
-        s_quantiles /= s_quantiles[-1]
+        bin_idx, curr_counts = np.unique(img, return_inverse=True,return_counts=True)[1:3]
+
+        desired_counts = self.desired_hist()
+
+        curr_hist_eq = np.cumsum(curr_counts).astype(np.float64)
+        curr_hist_eq /= curr_hist_eq[-1]
         
-        # Calculate s_k for specified image
-        t_quantiles = np.cumsum(t_counts).astype(np.float64)
-        t_quantiles /= t_quantiles[-1]
+        desired_hist_eq = np.cumsum(desired_counts).astype(np.float64)
+        desired_hist_eq /= desired_hist_eq[-1]
 
-        # Round the values
-        sour = np.around(s_quantiles*255)
-        temp = np.around(t_quantiles*255)
+        curr_hist = np.around(curr_hist_eq*255)
+        desired_hist = np.around(desired_hist_eq*255)
         
         # Map the rounded values
-        b=[]
-        for data in sour[:]:
-            b.append(self.find_nearest_above(temp,data))
-        b= np.array(b,dtype='uint8')
+        new_mapping=[]
+        for data in curr_hist[:]:
+            new_mapping.append(self.find_nearest_above(desired_hist,data))
+        new_mapping= np.array(new_mapping,dtype='uint8')
 
-        return b[bin_idx].reshape(oldshape)
+        return new_mapping[bin_idx].reshape(oldshape)
 
     
     def brFilterTF4e(self,img,P,Q,C_n,W):
@@ -75,6 +70,7 @@ class Midterm():
                 kernel[u,v] = 1-(np.exp(-(num/den)**2))
         
         cv2.normalize(kernel, kernel, 1.0, 0, cv2.NORM_L1)
+        
         res_img = cv2.filter2D(img,-1,kernel)
 
         return res_img
@@ -120,7 +116,9 @@ class Midterm():
         LS = []
         for i,l in enumerate(zip(lp1,lp2)):
             cols = l[0].shape[1]
-            ls = np.hstack((l[0][:,:cols//2], l[1][:,cols//2:]))
+            l1 = l[0]*abs((k[i]//255)-1)
+            l2 = l[1]*(k[i]//255)
+            ls = np.hstack((l1[:,:cols//2], l2[:,cols//2:]))
             LS.append(ls)
         
         res_img = LS[-1]
@@ -135,70 +133,74 @@ class Midterm():
 
 def main():
     
-    
-    # PROBLEM 1 RESULTS
-    path = "high_contrast.jpg"
-    img = cv2.imread(path)
-    cv2.imshow("P1 Original Image", img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    #set image
-    mt = Midterm()
+    # # PROBLEM 1 RESULTS
+    # path = "high_contrast.jpg"
+    # img = cv2.imread(path)
+    # cv2.imshow("P1 Original Image", img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    # #set image
+    # mt = Midterm()
 
-    #create image
-    p1_img = mt.hist_match(img)
-    cv2.imshow('P1 New image',p1_img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # #create image
+    # p1_img = mt.hist_match(img)
+    # cv2.imwrite('problem1/new_image.png',p1_img)
+    # cv2.imshow('P1 New image',p1_img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
-    #plot histogram
-    plt.hist(p1_img.flatten(),256,[0,256], color = 'b')
-    plt.hist(img.flatten(),256,[0,256], color = 'r')
-    plt.xlim([0,256])
-    plt.legend(('cdf','orginal'), loc = 'upper left')
-    plt.show()
+    # #plot histogram
+    # plt.hist(p1_img.flatten(),256,[0,256], color = 'b')
+    # plt.hist(img.flatten(),256,[0,256], color = 'r')
+    # plt.xlim([0,256])
+    # plt.legend(('cdf','orginal'), loc = 'upper left')
+    # plt.show()
 
-    #plot histogram transformation function
-    hist_new= mt.desired_hist()
-    plt.plot(hist_new, color = 'b')
-    plt.xlim([0,256])
-    plt.legend(('cdf','orginal'), loc = 'upper left')
-    plt.show()
+    # #plot histogram transformation function
+    # hist,bins = np.histogram(p1_img.flatten(),256,[0,256])
+    # cdf = hist.cumsum()
+    # cdf_normalized = cdf * float(hist.max()) / cdf.max()
+    # plt.plot(cdf_normalized, color = 'b')
+    # plt.xlim([0,256])
+    # plt.show()
 
-    # Problem 2 Results
-    path1 = "test_images/apple_gray.jpg"
-    img1 = cv2.imread(path1)
-    path2 = "test_images/orange_gray.jpg"
-    img2 = cv2.imread(path2)
-    cv2.imshow("P2 Original apple Image", img1)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    cv2.imshow("P2 Original orange Image", img2)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # # Problem 2 Results
+    # path1 = "test_images/apple_gray.jpg"
+    # img1 = cv2.imread(path1)
+    # path2 = "test_images/orange_gray.jpg"
+    # img2 = cv2.imread(path2)
+    # cv2.imshow("P2 Original apple Image", img1)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    # cv2.imshow("P2 Original orange Image", img2)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
-    #set image
-    mt = Midterm()
+    # #set image
+    # mt = Midterm()
 
-    #create gaussian pyramid
-    p2_imgs = mt.gaussian_pyramid(img1,3)
-    for p2_img in p2_imgs:
-        cv2.imshow('P2 New image',p2_img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+    # #create gaussian pyramid
+    # p2_imgs = mt.gaussian_pyramid(img1,3)
+    # for i,p2_img in enumerate(p2_imgs):
+    #     cv2.imwrite('problem2/gp_lvl'+str(i)+'.png',p2_img)
+    #     cv2.imshow('P2 New image',p2_img)
+    #     cv2.waitKey(0)
+    #     cv2.destroyAllWindows()
 
-    #create laplacian pyramid
-    p2_imgs = mt.laplacian_pyramid(img1,3)
-    for p2_img in p2_imgs:
-        cv2.imshow('P2 New image',p2_img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+    # #create laplacian pyramid
+    # p2_imgs = mt.laplacian_pyramid(img1,3)
+    # for i,p2_img in enumerate(p2_imgs):
+    #     cv2.imwrite('problem2/lp_lvl'+str(i)+'.png',p2_img)
+    #     cv2.imshow('P2 New image',p2_img)
+    #     cv2.waitKey(0)
+    #     cv2.destroyAllWindows()
 
-    #create image blend
-    p2_img = mt.image_blend(img1,img2,3)
-    cv2.imshow('P2 New image',p2_img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # #create image blend
+    # p2_img = mt.image_blend(img1,img2,3)
+    # cv2.imwrite('problem2/img_blend.png',p2_img)
+    # cv2.imshow('P2 New image',p2_img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     # PROBLEM 3 RESULTS
     path = "periodicnoise.jpg"
@@ -216,6 +218,7 @@ def main():
     C_n = 200
     W = 11500
     p3_img = mt.brFilterTF4e(img,P,Q,C_n,W)
+    cv2.imwrite('problem3/filtered_image.png',p3_img)
     cv2.imshow('P3 New image',p3_img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
