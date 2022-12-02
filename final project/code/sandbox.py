@@ -1,5 +1,23 @@
 #!/usr/bin/env python
+'''
 
+        # creating a open file action
+        open_file_action = QAction("Open file", self)
+        open_file_action.setStatusTip("Open file")
+        open_file_action.triggered.connect(self.file_open)
+        # similarly creating a save action
+        save_file_action = QAction("Save", self)
+        save_file_action.setStatusTip("Save current page")
+        save_file_action.triggered.connect(self.file_save)
+        # similarly creating save action
+        saveas_file_action = QAction("Save As", self)
+        saveas_file_action.setStatusTip("Save current page to specified file")
+        saveas_file_action.triggered.connect(self.file_saveas)
+        # for print action
+        print_action = QAction("Print", self)
+        print_action.setStatusTip("Print current page")
+        print_action.triggered.connect(self.file_print)
+'''
 
 #############################################################################
 ##

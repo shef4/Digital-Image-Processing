@@ -126,6 +126,13 @@ class ScribbleArea(QWidget):
     def penWidth(self):
         return self.myPenWidth
 
+
+
+
+
+
+
+
 # Creating main window class
 class MainWindow(QMainWindow):
     # constructor
@@ -166,8 +173,6 @@ class MainWindow(QMainWindow):
             touchpad widget end
         '''
 
-
-        
         # creating a QPlainTextEdit object
         self.editor = QPlainTextEdit()
         # setting font to the editor
@@ -203,110 +208,6 @@ class MainWindow(QMainWindow):
         # setting stats bar to the window
         self.setStatusBar(self.status)
 
- 
-
-
- 
-        # # creating actions to add in the file menu
-
-        # # creating a open file action
-        # open_file_action = QAction("Open file", self)
-        # open_file_action.setStatusTip("Open file")
-        # open_file_action.triggered.connect(self.file_open)
-        # # similarly creating a save action
-        # save_file_action = QAction("Save", self)
-        # save_file_action.setStatusTip("Save current page")
-        # save_file_action.triggered.connect(self.file_save)
-        # # similarly creating save action
-        # saveas_file_action = QAction("Save As", self)
-        # saveas_file_action.setStatusTip("Save current page to specified file")
-        # saveas_file_action.triggered.connect(self.file_saveas)
-        # # for print action
-        # print_action = QAction("Print", self)
-        # print_action.setStatusTip("Print current page")
-        # print_action.triggered.connect(self.file_print)
-
-        # # creating a file tool bar
-        # file_toolbar = QToolBar("File")
-        # # adding file tool bar to the window
-        # self.addToolBar(file_toolbar)
-        # # add actions to tool bar
-        # file_toolbar.addAction(open_file_action)
-        # file_toolbar.addAction(save_file_action) 
-        # file_toolbar.addAction(saveas_file_action)  
-        # file_toolbar.addAction(print_action)  
-
-        # # creating a file menu
-        # file_menu = self.menuBar().addMenu("&File")
-        # # add actions to file menu
-        # file_menu.addAction(open_file_action)
-        # file_menu.addAction(save_file_action)
-        # file_menu.addAction(saveas_file_action)
-        # file_menu.addAction(print_action)
-
-        
-
-        # # adding actions to the Edit menu and toolbar
-        # # undo action
-        # undo_action = QAction("Undo", self)
-        # undo_action.setStatusTip("Undo last change")
-        # undo_action.triggered.connect(self.editor.undo)
-        # # redo action
-        # redo_action = QAction("Redo", self)
-        # redo_action.setStatusTip("Redo last change")
-        # redo_action.triggered.connect(self.editor.redo)
-        # # cut action
-        # cut_action = QAction("Cut", self)
-        # cut_action.setStatusTip("Cut selected text")
-        # cut_action.triggered.connect(self.editor.cut)
-        # # copy action
-        # copy_action = QAction("Copy", self)
-        # copy_action.setStatusTip("Copy selected text")
-        # copy_action.triggered.connect(self.editor.copy)
-        # # paste action
-        # paste_action = QAction("Paste", self)
-        # paste_action.setStatusTip("Paste from clipboard")
-        # paste_action.triggered.connect(self.editor.paste)
-        # # select all action
-        # select_action = QAction("Select all", self)
-        # select_action.setStatusTip("Select all text")
-        # select_action.triggered.connect(self.editor.selectAll)
-        # # adding actions to the tool bar and menu bar
-        # run_action = QAction("Run", self)
-        # run_action.setStatusTip("Run the code")
-        # run_action.triggered.connect(self.run_code)
-        # # wrap action
-        # wrap_action = QAction("Wrap text to window", self)
-        # wrap_action.setStatusTip("Check to wrap text to window")
-        # wrap_action.setCheckable(True)
-        # wrap_action.setChecked(True)
-        # wrap_action.triggered.connect(self.edit_toggle_wrap)
-
-        # # creating another tool bar for editing text
-        # edit_toolbar = QToolBar("Edit")
-        # # adding this tool bar to the main window
-        # self.addToolBar(edit_toolbar)
-        # # add action to tool and toolbar
-        # edit_toolbar.addAction(undo_action)
-        # edit_toolbar.addAction(redo_action)
-        # edit_toolbar.addAction(cut_action)
-        # edit_toolbar.addAction(copy_action)
-        # edit_toolbar.addAction(paste_action)
-        # edit_toolbar.addAction(select_action)
-        # edit_toolbar.addAction(run_action)
-
-        # # creating a edit menu bar
-        # edit_menu = self.menuBar().addMenu("&Edit")
-        # # add action to tool and menu bar
-        # edit_menu.addAction(undo_action)
-        # edit_menu.addAction(redo_action)
-        # edit_menu.addAction(cut_action)
-        # edit_menu.addAction(copy_action)
-        # edit_menu.addAction(paste_action)
-        # edit_menu.addAction(select_action)
-        # edit_menu.addAction(run_action)
-        # edit_menu.addAction(wrap_action)
-
         self.createActions()
         self.createToolbars()
         self.createMenus()
@@ -327,57 +228,65 @@ class MainWindow(QMainWindow):
         self.openAct = QAction("Open file", self, shortcut=QKeySequence.Open,
                 statusTip="Open file", triggered=self.file_open)
 
-        self.runAct = QAction(QIcon('create.png'), '&Create', self, shortcut=QKeySequence(Qt.CTRL + Qt.Key_R),
-                statusTip="Run the code", triggered=self.run_code)
-
-        self.newAct = QAction(QIcon('new.png'), '&New', self, shortcut=QKeySequence.New,
+        self.newAct = QAction('&New', self, shortcut=QKeySequence.New,
                 statusTip="Create a new file", triggered=self.file_new)
 
-        self.saveAct = QAction(QIcon('save.png'), '&Save', self, shortcut=QKeySequence.Save,
+        self.saveAct = QAction('&Save', self, shortcut=QKeySequence.Save,
                 statusTip="Save the document to disk", triggered=self.file_save)
 
-        self.saveAsAct = QAction("Save &As...", self, shortcut=QKeySequence.SaveAs,
+        self.saveAsAct = QAction("Save &As...", self, shortcut=QKeySequence(Qt.CTRL + Qt.Key_S),
                 statusTip="Save the document under a new name",
                 triggered=self.file_saveas)
 
-        self.printAct = QAction(QIcon('print.png'), '&Print...', self, shortcut=QKeySequence.Print,
+        self.printAct = QAction('&Print...', self, shortcut=QKeySequence.Print,
                 statusTip="Print the document", triggered=self.file_print)
 
-        self.exitAct = QAction("&Exit", self, shortcut="Ctrl+Q",
-                statusTip="Exit the application", triggered=self.close)
-
-        self.cutAct = QAction(QIcon('cut.png'), "&Cut", self, shortcut=QKeySequence.Cut,
+        self.cutAct = QAction("&Cut", self, shortcut=QKeySequence.Cut,
                 statusTip="Cut the current selection's contents to the clipboard",
                 triggered=self.editor.cut)
 
-        self.copyAct = QAction(QIcon('copy.png'), "&Copy", self, shortcut=QKeySequence.Copy,
+        self.copyAct = QAction("&Copy", self, shortcut=QKeySequence.Copy,
                 statusTip="Copy the current selection's contents to the clipboard",
                 triggered=self.editor.copy)
 
-        self.pasteAct = QAction(QIcon('paste.png'), "&Paste", self, shortcut=QKeySequence.Paste,
+        self.pasteAct = QAction("&Paste", self, shortcut=QKeySequence.Paste,
                 statusTip="Paste the clipboard's contents into the current selection",
                 triggered=self.editor.paste)
 
-        self.undoAct = QAction(QIcon('undo.png'), "&Undo", self, shortcut=QKeySequence.Undo,
+        self.undoAct = QAction("&Undo", self, shortcut=QKeySequence.Undo,
                 statusTip="Undo the last operation", triggered=self.editor.undo)
 
-        self.redoAct = QAction(QIcon('redo.png'), "&Redo", self, shortcut=QKeySequence.Redo,
+        self.redoAct = QAction("&Redo", self, shortcut=QKeySequence.Redo,
                 statusTip="Redo the last operation", triggered=self.editor.redo)
+        
+        self.runAct = QAction('&Run', self, shortcut=QKeySequence(Qt.CTRL + Qt.Key_R),
+                statusTip="Run the code", triggered=self.run_code)
+        
+        self.ifAct = QAction('&△ if', self, shortcut=QKeySequence(Qt.CTRL + Qt.Key_1),
+                statusTip="If statement", triggered=self.if_statement)
+
+        self.elseAct = QAction('&▽ else', self, shortcut=QKeySequence(Qt.CTRL + Qt.Key_2),
+                statusTip="Else statement", triggered=self.else_statement)
+
+        self.loopAct = QAction('&◯ loop', self, shortcut=QKeySequence(Qt.CTRL + Qt.Key_4),
+                statusTip="Loop statement", triggered=self.loop_statement)
+
+        self.doAct = QAction('&→ do', self, shortcut=QKeySequence(Qt.CTRL + Qt.Key_5),
+                statusTip="Do statement", triggered=self.do_statement)
+      
+        self.structAct = QAction('&▢ struct', self, shortcut=QKeySequence(Qt.CTRL + Qt.Key_6),
+                statusTip="Struct statement", triggered=self.struct_statement)
 
 
     def createToolbars(self):
-        fileToolbar = self.addToolBar("File")
-        fileToolbar.addAction(self.newAct)
-        fileToolbar.addAction(self.openAct)
-        fileToolbar.addAction(self.saveAct)
-        fileToolbar.addAction(self.printAct)
+        editToolbar = self.addToolBar("code")
+        editToolbar.addAction(self.runAct)
+        editToolbar.addAction(self.ifAct)
+        editToolbar.addAction(self.elseAct)
+        editToolbar.addAction(self.loopAct)
+        editToolbar.addAction(self.doAct)
+        editToolbar.addAction(self.structAct)
 
-        editToolbar = self.addToolBar("Edit")
-        editToolbar.addAction(self.cutAct)
-        editToolbar.addAction(self.copyAct)
-        editToolbar.addAction(self.pasteAct)
-        editToolbar.addAction(self.undoAct)
-        editToolbar.addAction(self.redoAct)
 
     def createMenus(self):
         self.fileMenu = self.menuBar().addMenu("&File")
@@ -387,8 +296,6 @@ class MainWindow(QMainWindow):
         self.fileMenu.addAction(self.saveAsAct)
         self.fileMenu.addSeparator()
         self.fileMenu.addAction(self.printAct)
-        self.fileMenu.addSeparator()
-        self.fileMenu.addAction(self.exitAct)
 
         self.editMenu = self.menuBar().addMenu("&Edit")
         self.editMenu.addAction(self.cutAct)
@@ -397,12 +304,13 @@ class MainWindow(QMainWindow):
         self.editMenu.addSeparator()
         self.editMenu.addAction(self.undoAct)
         self.editMenu.addAction(self.redoAct)
+        self.editMenu.addAction(self.wrapAct)
 
     #method for entering symbol to editer
     def enter_symbol(self):
         #img = self.scribbleArea.getImage
         #set display text in qplaintextedit self.editor
-        self.editor.appenPlainText("test")
+        self.terminal.appenPlainText("test")
 
     # method for runing the code
     def run_code(self):
@@ -422,12 +330,30 @@ class MainWindow(QMainWindow):
         #     self.terminal.setPlainText("Error: " + sk.error)
         #set display text in qplaintextedit self.termnal 
         self.terminal.appendPlainText("test")
+    
+    # method to print in editor if statement
+    def if_statement(self):
+        self.editor.appendPlainText("△ true → \n\tpass")
 
+    # method to print in editor else statement
+    def else_statement(self):
+        self.editor.appendPlainText("▽ true → \n\tpass")
+
+    # method to print in editor loop statement
+    def loop_statement(self):
+        self.editor.appendPlainText("◯ true → \n\tpass")
+
+    # method to print in editor do statement
+    def do_statement(self):
+        self.editor.appendPlainText("→ pass")
+
+    # method to print in editor struct statement
+    def struct_statement(self):
+        self.editor.appendPlainText("▢ struct_name → \n"+"\tname = 'bob'\n"+"\tage = 12\n"+"▢")
 
     # creating dialog critical method
     # to show errors
     def dialog_critical(self, s):
- 
         # creating a QMessageBox object
         dlg = QMessageBox(self)
  
